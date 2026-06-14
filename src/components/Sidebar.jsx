@@ -53,7 +53,7 @@ export default function Sidebar({ isOpen, onClose }) {
                       `flex items-center justify-between px-3 py-2.5 rounded text-sm font-medium transition-colors cursor-pointer group ${
                         isActive
                           ? 'bg-indigo-50 text-indigo-600 border border-indigo-100 font-semibold'
-                          : 'text-slate-600 hover:text-indigo-650 hover:bg-slate-50 border border-transparent'
+                          : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50 border border-transparent'
                       }`
                     }
                   >

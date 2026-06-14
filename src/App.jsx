@@ -21,7 +21,7 @@ function ProtectedLayout({ children }) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="animate-spin rounded-full h-8 w-8 border-4 border-slate-200 border-t-indigo-650" />
+          <div className="animate-spin rounded-full h-8 w-8 border-4 border-slate-200 border-t-indigo-600" />
           <span className="text-slate-500 text-xs font-bold tracking-widest uppercase">Loading application...</span>
         </div>
       </div>

@@ -35,7 +35,7 @@ export default function Login() {
     <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col items-center justify-center p-6">
       {/* Brand logo */}
       <div className="flex items-center gap-2 mb-6 text-center justify-center">
-        <div className="bg-indigo-650 text-white p-2 rounded-lg font-bold">
+        <div className="bg-indigo-600 text-white p-2 rounded-lg font-bold">
           <Layers className="h-6 w-6" />
         </div>
         <span className="font-bold text-xl tracking-wide text-slate-900">
@@ -94,7 +94,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-indigo-650 hover:bg-indigo-700 text-white font-bold rounded shadow-sm transition-transform active:scale-98 flex items-center justify-center gap-2 text-xs uppercase tracking-widest cursor-pointer mt-2"
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow-sm transition-transform active:scale-98 flex items-center justify-center gap-2 text-xs uppercase tracking-widest cursor-pointer mt-2"
           >
             {loading ? 'Signing in...' : 'Sign In'}
             <ArrowRight className="h-4 w-4" />

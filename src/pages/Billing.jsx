@@ -358,7 +358,7 @@ export default function Billing() {
               <button
                 type="button"
                 onClick={() => setShowCustForm(!showCustForm)}
-                className="text-[11px] text-indigo-650 hover:underline font-bold"
+                className="text-[11px] text-indigo-600 hover:underline font-bold"
               >
                 {showCustForm ? 'Cancel Registration' : '+ Quick Register Customer'}
               </button>
@@ -366,7 +366,7 @@ export default function Billing() {
 
             {showCustForm ? (
               <form onSubmit={handleQuickCustomerRegister} className="space-y-3 p-3 bg-slate-50 rounded border border-slate-200">
-                <span className="text-[10px] text-indigo-650 font-bold uppercase tracking-wider block">Add Customer Profile</span>
+                <span className="text-[10px] text-indigo-600 font-bold uppercase tracking-wider block">Add Customer Profile</span>
                 <div>
                   <label className="block text-[10px] font-bold uppercase text-slate-500 mb-1">Customer Name *</label>
                   <input
@@ -401,7 +401,7 @@ export default function Billing() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2 bg-indigo-650 hover:bg-indigo-700 text-white rounded font-bold text-xs uppercase"
+                  className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded font-bold text-xs uppercase"
                 >
                   Save and Link Customer
                 </button>
@@ -730,7 +730,7 @@ export default function Billing() {
               <div className="flex justify-between items-start border-b border-slate-200 pb-5">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 text-slate-900 font-bold">
-                    <div className="bg-indigo-650 text-white p-1 rounded font-bold">WS</div>
+                    <div className="bg-indigo-600 text-white p-1 rounded font-bold">WS</div>
                     <span className="font-extrabold text-lg tracking-wide">WHOLESALE SUITE</span>
                   </div>
                   <p className="text-[11px] text-slate-500 leading-normal">

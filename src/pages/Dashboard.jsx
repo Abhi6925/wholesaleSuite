@@ -51,7 +51,7 @@ export default function Dashboard() {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="flex flex-col items-center gap-3">
-          <div className="animate-spin rounded-full h-10 w-10 border-4 border-slate-200 border-t-indigo-650" />
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-slate-200 border-t-indigo-600" />
           <span className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Compiling stats...</span>
         </div>
       </div>
@@ -186,7 +186,7 @@ export default function Dashboard() {
       <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm space-y-4">
         <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
           <h3 className="font-bold text-sm text-slate-900">Sales Analytics Performance</h3>
-          <span className="text-xs text-indigo-650 bg-indigo-50 px-2 py-0.5 rounded font-semibold border border-indigo-100">Chart.js Visualization</span>
+          <span className="text-xs text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded font-semibold border border-indigo-100">Chart.js Visualization</span>
         </div>
         <div className="h-64 relative">
           {recentSales.length === 0 ? (

@@ -18,7 +18,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col selection:bg-indigo-650 selection:text-white">
+    <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col selection:bg-indigo-600 selection:text-white">
       {/* Top navigation header */}
       <nav className="border-b border-slate-200 bg-white w-full h-18 px-6 flex items-center justify-between shrink-0 shadow-sm">
         <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
@@ -40,7 +40,7 @@ export default function Home() {
             </Link>
             <Link
               to="/register"
-              className="text-sm font-bold bg-indigo-650 text-white hover:bg-indigo-700 transition px-4 py-2 rounded flex items-center gap-1 cursor-pointer shadow-sm"
+              className="text-sm font-bold bg-indigo-600 text-white hover:bg-indigo-700 transition px-4 py-2 rounded flex items-center gap-1 cursor-pointer shadow-sm"
             >
               Get Started
               <ArrowRight className="h-4 w-4" />
@@ -51,7 +51,7 @@ export default function Home() {
 
       {/* Hero Block */}
       <main className="flex-1 flex flex-col justify-center items-center px-6 py-12 md:py-20 text-center max-w-5xl mx-auto">
-        <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-650 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase mb-6 animate-fade-in shadow-sm">
+        <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase mb-6 animate-fade-in shadow-sm">
           ★ B.Tech Term Project Showcase
         </div>
 
@@ -69,7 +69,7 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row gap-4 mb-20">
           <Link
             to="/login"
-            className="px-8 py-3.5 bg-indigo-650 hover:bg-indigo-700 text-white font-bold rounded shadow transition flex items-center justify-center gap-2 text-sm uppercase tracking-wider cursor-pointer"
+            className="px-8 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow transition flex items-center justify-center gap-2 text-sm uppercase tracking-wider cursor-pointer"
           >
             Admin Sign In
             <ArrowRight className="h-4.5 w-4.5" />
@@ -88,7 +88,7 @@ export default function Home() {
             const IconComp = b.icon;
             return (
               <div key={idx} className="bg-white border border-slate-200 p-6 rounded-lg hover:border-indigo-400 transition group shadow-sm">
-                <div className="bg-indigo-55/10 text-indigo-600 p-2.5 rounded w-fit mb-4 group-hover:bg-indigo-650 group-hover:text-white transition-colors bg-indigo-50 border border-indigo-100">
+                <div className="bg-indigo-55/10 text-indigo-600 p-2.5 rounded w-fit mb-4 group-hover:bg-indigo-600 group-hover:text-white transition-colors bg-indigo-50 border border-indigo-100">
                   <IconComp className="h-5 w-5 text-indigo-600 group-hover:text-white" />
                 </div>
                 <h3 className="font-bold text-sm text-slate-900 mb-2">{b.title}</h3>
