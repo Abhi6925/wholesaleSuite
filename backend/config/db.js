@@ -4,7 +4,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_DIR = path.join(__dirname, '../../database_files');
+
+// Vercel serverless has a read-only filesystem except /tmp
+// Render and localhost use the project's database_files/ folder
+const DATA_DIR = process.env.VERCEL
+  ? '/tmp/database_files'
+  : path.join(__dirname, '../../database_files');
 
 // Ensure the local database folder exists
 if (!fs.existsSync(DATA_DIR)) {
