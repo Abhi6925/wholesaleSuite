@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+/* =============================================
+   PRINT STYLES — Invoice-only print layout
+   ============================================= */
+@media print {
+  /* 1. Reset page background */
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 2. Hide EVERYTHING on the page by default */
+  body * {
+    visibility: hidden !important;
+  }
+
+  /* 3. Hide the modal backdrop overlay */
+  #invoice-modal-overlay {
+    background: transparent !important;
+    position: static !important;
+  }
+
+  /* 4. Only show the invoice sheet and all its children */
+  #invoice-sheet-print,
+  #invoice-sheet-print * {
+    visibility: visible !important;
+  }
+
+  /* 5. Position the invoice sheet at top-left of the printed page */
+  #invoice-sheet-print {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* 6. Hide the control banner (Download / Print / Close buttons) inside the invoice */
+  #invoice-sheet-print > div:first-child {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+/* Custom visual layout alignment */
+.md\:pl-70 {
+  @media (min-width: 768px) {
+    padding-left: 17.5rem;
+  }
+}
+

@@ -1,0 +1,6 @@
+{
+  "name": "Wholesale Inventory and Billing",
+  "description": "A simple and robust MERN Wholesale Inventory and Billing Management System for small wholesalers and shop owners, featuring stock tracking, invoice generation, customer/supplier management, and sales reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
