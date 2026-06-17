@@ -34,7 +34,7 @@ app.get('/api/status', (req, res) => {
 
 
 // Middleware for Route exceptions
-app.use(notFound);
+app.use('/api', notFound);
 app.use(errorHandler);
 
 export default app;

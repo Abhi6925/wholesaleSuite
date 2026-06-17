@@ -51,10 +51,6 @@ export default function Home() {
 
       {/* Hero Block */}
       <main className="flex-1 flex flex-col justify-center items-center px-6 py-12 md:py-20 text-center max-w-5xl mx-auto">
-        <div className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase mb-6 animate-fade-in shadow-sm">
-          ★ B.Tech Term Project Showcase
-        </div>
-
         <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-950 mb-6 leading-tight max-w-3xl">
           Wholesale Inventory & <br />
           <span className="text-indigo-600">
@@ -101,7 +97,7 @@ export default function Home() {
 
       {/* Footer banner */}
       <footer className="h-16 border-t border-slate-200 flex items-center justify-center text-xs text-slate-500 tracking-wider bg-white px-6 mt-12 shadow-inner">
-        MERN College Project Portfolio • Built with React, Express, and MongoDB
+        WholesaleSuite - Inventory, Billing, and Business Reporting
       </footer>
     </div>
   );

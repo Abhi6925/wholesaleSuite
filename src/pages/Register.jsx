@@ -69,7 +69,7 @@ export default function Register() {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. John Doe"
+                placeholder="Full name"
                 className="w-full text-sm bg-slate-50 border border-slate-200 rounded pl-10 pr-4 py-2.5 focus:ring-1 focus:ring-indigo-550 focus:outline-none focus:border-indigo-500 placeholder:text-slate-400"
                 required
               />
@@ -86,7 +86,7 @@ export default function Register() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@company.com"
+                placeholder="Email address"
                 className="w-full text-sm bg-slate-50 border border-slate-200 rounded pl-10 pr-4 py-2.5 focus:ring-1 focus:ring-indigo-550 focus:outline-none focus:border-indigo-500 placeholder:text-slate-400"
                 required
               />
@@ -103,7 +103,7 @@ export default function Register() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Min 6 characters"
+                placeholder="Password"
                 className="w-full text-sm bg-slate-50 border border-slate-200 rounded pl-10 pr-4 py-2.5 focus:ring-1 focus:ring-indigo-550 focus:outline-none focus:border-indigo-500 placeholder:text-slate-400"
                 required
               />

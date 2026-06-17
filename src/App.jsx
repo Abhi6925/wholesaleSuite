@@ -11,6 +11,8 @@ import Dashboard from './pages/Dashboard.jsx';
 import Products from './pages/Products.jsx';
 import Billing from './pages/Billing.jsx';
 import Profile from './pages/Profile.jsx';
+import Suppliers from './pages/Suppliers.jsx';
+
 
 // Protected Module Layout wrapper
 function ProtectedLayout({ children }) {
@@ -95,6 +97,15 @@ export default function App() {
               </ProtectedLayout>
             }
           />
+          <Route
+            path="/suppliers"
+            element={
+              <ProtectedLayout>
+                <Suppliers />
+              </ProtectedLayout>
+            }
+          />
+
 
           {/* Global route redirection wildcard catchall */}
           <Route path="*" element={<Navigate to="/" replace />} />

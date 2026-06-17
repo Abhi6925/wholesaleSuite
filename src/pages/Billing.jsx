@@ -374,7 +374,7 @@ export default function Billing() {
                     required
                     value={newCustName}
                     onChange={(e) => setNewCustName(e.target.value)}
-                    placeholder="e.g. Gupta Enterprises"
+                    placeholder="Customer or business name"
                     className="w-full text-xs p-2 border border-slate-300 bg-white rounded outline-none"
                   />
                 </div>
@@ -385,7 +385,7 @@ export default function Billing() {
                     required
                     value={newCustPhone}
                     onChange={(e) => setNewCustPhone(e.target.value)}
-                    placeholder="e.g. 9876543210"
+                    placeholder="Phone number"
                     className="w-full text-xs p-2 border border-slate-300 bg-white rounded outline-none"
                   />
                 </div>
@@ -395,7 +395,7 @@ export default function Billing() {
                     type="text"
                     value={newCustAddress}
                     onChange={(e) => setNewCustAddress(e.target.value)}
-                    placeholder="e.g. Sector-5, Rohini, Delhi"
+                    placeholder="Billing address"
                     className="w-full text-xs p-2 border border-slate-300 bg-white rounded outline-none"
                   />
                 </div>
@@ -455,7 +455,7 @@ export default function Billing() {
                 type="text"
                 value={barcodeInput}
                 onChange={(e) => setBarcodeInput(e.target.value)}
-                placeholder="Enter SKU Code (e.g. PROD001)"
+                placeholder="Scan or enter SKU code"
                 className="w-full text-xs p-2.5 border border-slate-300 rounded focus:ring-1 focus:ring-indigo-500 focus:outline-none placeholder:text-slate-450"
               />
               <button
@@ -466,7 +466,7 @@ export default function Billing() {
               </button>
             </form>
             <p className="text-[10.5px] text-slate-500 leading-normal">
-              Type a product's SKU code (e.g., <strong>PROD001</strong>) and press enter to simulate a barcode scanner adding items instantly to the cart.
+              Type a product SKU and press Enter to add the matching item to the cart.
             </p>
           </div>
 

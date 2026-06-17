@@ -16,6 +16,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Inventory & Products', path: '/products', icon: Box },
+    { name: 'Suppliers Registry', path: '/suppliers', icon: Truck },
     { name: 'Billing & Invoices', path: '/billing', icon: Receipt },
     { name: 'Admin Profile', path: '/profile', icon: User },
   ];

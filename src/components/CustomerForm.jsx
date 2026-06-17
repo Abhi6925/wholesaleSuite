@@ -84,7 +84,7 @@ export default function CustomerForm({ customer, onSubmit, onCancel }) {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              placeholder="e.g. Ramesh Kumar / Gupta Stores"
+              placeholder="Customer or business name"
               className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
               required
             />
@@ -99,7 +99,7 @@ export default function CustomerForm({ customer, onSubmit, onCancel }) {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              placeholder="e.g. +91 98765 43210"
+              placeholder="Phone number"
               className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
               required
             />
@@ -114,7 +114,7 @@ export default function CustomerForm({ customer, onSubmit, onCancel }) {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="e.g. buyer@example.com"
+              placeholder="Email address"
               className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
             />
           </div>
@@ -127,7 +127,7 @@ export default function CustomerForm({ customer, onSubmit, onCancel }) {
               name="address"
               value={formData.address}
               onChange={handleChange}
-              placeholder="e.g. Sector-4, Rohini, New Delhi - 110085"
+              placeholder="Street, area, city, PIN code"
               rows="3"
               className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
             />

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api.js';
 import { HelpCircle, Save, X } from 'lucide-react';
+import SupplierForm from './SupplierForm.jsx';
+
 
 export default function ProductForm({ product, suppliers, onSubmit, onCancel }) {
   const [formData, setFormData] = useState({
@@ -15,6 +17,14 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [localSuppliers, setLocalSuppliers] = useState(suppliers || []);
+  const [isAddingSupplier, setIsAddingSupplier] = useState(false);
+
+  useEffect(() => {
+    if (suppliers) {
+      setLocalSuppliers(suppliers);
+    }
+  }, [suppliers]);
 
   useEffect(() => {
     if (product) {
@@ -28,11 +38,34 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
         supplierId: product.supplierId || '',
         description: product.description || '',
       });
-    } else if (suppliers && suppliers.length > 0) {
+    } else if (localSuppliers && localSuppliers.length > 0) {
       // Set default supplier if none selected
-      setFormData(prev => ({ ...prev, supplierId: suppliers[0]._id }));
+      setFormData(prev => ({ ...prev, supplierId: localSuppliers[0]._id }));
     }
-  }, [product, suppliers]);
+  }, [product, localSuppliers]);
+
+  const handleSupplierAdded = async () => {
+    try {
+      const res = await api.get('/suppliers');
+      const updatedSuppliers = res.data || [];
+      setLocalSuppliers(updatedSuppliers);
+      
+      if (updatedSuppliers.length > 0) {
+        const existingIds = new Set(localSuppliers.map(s => s._id));
+        const newSupplier = updatedSuppliers.find(s => !existingIds.has(s._id));
+        if (newSupplier) {
+          setFormData(prev => ({ ...prev, supplierId: newSupplier._id }));
+        } else {
+          setFormData(prev => ({ ...prev, supplierId: updatedSuppliers[updatedSuppliers.length - 1]._id }));
+        }
+      }
+    } catch (err) {
+      console.error('Failed to refresh suppliers:', err);
+    } finally {
+      setIsAddingSupplier(false);
+    }
+  };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -107,7 +140,7 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                placeholder="e.g. Premium Basmati Rice"
+                placeholder="Product name"
                 className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
                 required
               />
@@ -122,7 +155,7 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
                 name="code"
                 value={formData.code}
                 onChange={handleChange}
-                placeholder="e.g. RIC-BAS-01"
+                placeholder="SKU code"
                 className="w-full text-sm border border-slate-300 rounded px-3 py-2 disabled:bg-slate-100 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
                 disabled={!!product}
                 required
@@ -140,16 +173,25 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                placeholder="e.g. Grains / Dairy"
+                placeholder="Category"
                 className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-700 tracking-wider mb-1 uppercase">
-                Link Supplier *
-              </label>
+              <div className="flex justify-between items-center mb-1">
+                <label className="block text-xs font-bold text-slate-700 tracking-wider uppercase">
+                  Link Supplier *
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setIsAddingSupplier(true)}
+                  className="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 hover:underline flex items-center gap-0.5 cursor-pointer uppercase tracking-wider"
+                >
+                  + Add New
+                </button>
+              </div>
               <select
                 name="supplierId"
                 value={formData.supplierId}
@@ -157,10 +199,10 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
                 className="w-full text-sm border border-slate-300 rounded px-3 py-2 bg-white focus:ring-1 focus:ring-emerald-500 focus:outline-none"
                 required
               >
-                {suppliers.length === 0 ? (
+                {localSuppliers.length === 0 ? (
                   <option value="">(No registered suppliers)</option>
                 ) : (
-                  suppliers.map(s => (
+                  localSuppliers.map(s => (
                     <option key={s._id} value={s._id}>{s.name}</option>
                   ))
                 )}
@@ -178,7 +220,7 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
                 name="purchasePrice"
                 value={formData.purchasePrice || ''}
                 onChange={handleChange}
-                placeholder="Cost"
+                placeholder="Purchase"
                 min="0"
                 step="any"
                 className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
@@ -195,7 +237,7 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
                 name="sellingPrice"
                 value={formData.sellingPrice || ''}
                 onChange={handleChange}
-                placeholder="Retail"
+                placeholder="Selling"
                 min="0"
                 step="any"
                 className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
@@ -212,7 +254,7 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
                 name="quantity"
                 value={formData.quantity || ''}
                 onChange={handleChange}
-                placeholder="Quantity"
+                placeholder="Stock"
                 min="0"
                 className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
                 required
@@ -228,7 +270,7 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
               name="description"
               value={formData.description}
               onChange={handleChange}
-              placeholder="Provide warehousing specs, storage racks details, shelf lifespan notes..."
+              placeholder="Notes, storage details, or pack size"
               rows="3"
               className="w-full text-sm border border-slate-300 rounded px-3 py-2 focus:ring-1 focus:ring-emerald-500 focus:outline-none"
             />
@@ -253,6 +295,13 @@ export default function ProductForm({ product, suppliers, onSubmit, onCancel }) 
           </div>
         </form>
       </div>
+
+      {isAddingSupplier && (
+        <SupplierForm
+          onSubmit={handleSupplierAdded}
+          onCancel={() => setIsAddingSupplier(false)}
+        />
+      )}
     </div>
   );
 }

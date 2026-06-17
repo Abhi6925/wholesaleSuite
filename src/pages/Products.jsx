@@ -138,7 +138,7 @@ export default function Products() {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search by product name, SKU code..."
+            placeholder="Search products or SKU"
             className="w-full text-xs pl-10 pr-4 py-2.5 border border-slate-300 rounded focus:ring-1 focus:ring-indigo-500 focus:outline-none bg-slate-50"
           />
         </div>
