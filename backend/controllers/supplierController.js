@@ -5,7 +5,7 @@ import Supplier from '../models/Supplier.js';
 // @access  Private
 export const getSuppliers = async (req, res) => {
   try {
-    const suppliers = await Supplier.find({});
+    const suppliers = await Supplier.find({ userId: req.user._id });
     return res.json(suppliers);
   } catch (error) {
     console.error('getSuppliers Error:', error.message);
@@ -18,7 +18,7 @@ export const getSuppliers = async (req, res) => {
 // @access  Private
 export const getSupplierById = async (req, res) => {
   try {
-    const supplier = await Supplier.findById(req.params.id);
+    const supplier = await Supplier.findOne({ _id: req.params.id, userId: req.user._id });
     if (!supplier) {
       return res.status(404).json({ message: 'Supplier not found' });
     }
@@ -41,6 +41,7 @@ export const createSupplier = async (req, res) => {
     }
 
     const supplier = await Supplier.create({
+      userId: req.user._id,
       name,
       email: email || '',
       phone,
@@ -61,7 +62,7 @@ export const updateSupplier = async (req, res) => {
   try {
     const { name, email, phone, address } = req.body;
 
-    const supplier = await Supplier.findById(req.params.id);
+    const supplier = await Supplier.findOne({ _id: req.params.id, userId: req.user._id });
     if (!supplier) {
       return res.status(404).json({ message: 'Supplier not found' });
     }
@@ -85,7 +86,7 @@ export const updateSupplier = async (req, res) => {
 // @access  Private
 export const deleteSupplier = async (req, res) => {
   try {
-    const supplier = await Supplier.findById(req.params.id);
+    const supplier = await Supplier.findOne({ _id: req.params.id, userId: req.user._id });
     if (!supplier) {
       return res.status(404).json({ message: 'Supplier profile was not found' });
     }

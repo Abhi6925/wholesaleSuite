@@ -1,4 +1,5 @@
 import Product from '../models/Product.js';
+import Supplier from '../models/Supplier.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -7,7 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const HISTORY_FILE = path.join(__dirname, '../../database_files/stock_history.json');
 
 // Helper to keep audit log of stock movements
-const logStockAdjustment = (productId, name, code, beforeQty, change, afterQty, actionType, description = '') => {
+const logStockAdjustment = (userId, productId, name, code, beforeQty, change, afterQty, actionType, description = '') => {
   try {
     const dir = path.dirname(HISTORY_FILE);
     if (!fs.existsSync(dir)) {
@@ -20,6 +21,7 @@ const logStockAdjustment = (productId, name, code, beforeQty, change, afterQty, 
     }
     const newLog = {
       _id: Math.random().toString(36).substring(2, 11),
+      userId: userId ? userId.toString() : null,
       productId,
       name,
       code,
@@ -42,7 +44,7 @@ const logStockAdjustment = (productId, name, code, beforeQty, change, afterQty, 
 // @access  Private
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({ userId: req.user._id });
     return res.json(products);
   } catch (error) {
     console.error('getProducts Error:', error.message);
@@ -55,7 +57,7 @@ export const getProducts = async (req, res) => {
 // @access  Private
 export const getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findOne({ _id: req.params.id, userId: req.user._id });
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
@@ -77,13 +79,20 @@ export const createProduct = async (req, res) => {
       return res.status(400).json({ message: 'Please provide all required fields' });
     }
 
-    // Check for duplicate product code
-    const duplicate = await Product.findOne({ code });
+    // Verify supplier belongs to user
+    const supplier = await Supplier.findOne({ _id: supplierId, userId: req.user._id });
+    if (!supplier) {
+      return res.status(400).json({ message: 'Referenced supplier not found' });
+    }
+
+    // Check for duplicate product code within the user's products
+    const duplicate = await Product.findOne({ code, userId: req.user._id });
     if (duplicate) {
       return res.status(400).json({ message: 'Product with this code already exists' });
     }
 
     const product = await Product.create({
+      userId: req.user._id,
       name,
       code,
       category,
@@ -95,7 +104,7 @@ export const createProduct = async (req, res) => {
     });
 
     // Log creation adjustment
-    logStockAdjustment(product._id, product.name, product.code, 0, product.quantity, product.quantity, 'RESTOCK_ADD', 'Initial product batch creation');
+    logStockAdjustment(req.user._id, product._id, product.name, product.code, 0, product.quantity, product.quantity, 'RESTOCK_ADD', 'Initial product batch creation');
 
     return res.status(201).json(product);
   } catch (error) {
@@ -111,14 +120,22 @@ export const updateProduct = async (req, res) => {
   try {
     const { name, code, category, purchasePrice, sellingPrice, quantity, supplierId, description } = req.body;
 
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findOne({ _id: req.params.id, userId: req.user._id });
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    // Check code uniqueness
+    // Verify supplier belongs to user if provided
+    if (supplierId && supplierId !== product.supplierId) {
+      const supplier = await Supplier.findOne({ _id: supplierId, userId: req.user._id });
+      if (!supplier) {
+        return res.status(400).json({ message: 'Referenced supplier not found' });
+      }
+    }
+
+    // Check code uniqueness within the user's products
     if (code && code !== product.code) {
-      const codeExists = await Product.findOne({ code });
+      const codeExists = await Product.findOne({ code, userId: req.user._id });
       if (codeExists) {
         return res.status(400).json({ message: 'Product code is already in use by another product' });
       }
@@ -142,7 +159,7 @@ export const updateProduct = async (req, res) => {
     if (oldQty !== newQty) {
       const diff = newQty - oldQty;
       const type = diff > 0 ? 'RESTOCK_ADD' : 'STOCK_REDUCTION';
-      logStockAdjustment(product._id, name || product.name, code || product.code, oldQty, diff, newQty, type, 'Manual stock adjustment on product update form');
+      logStockAdjustment(req.user._id, product._id, name || product.name, code || product.code, oldQty, diff, newQty, type, 'Manual stock adjustment on product update form');
     }
 
     return res.json({ message: 'Product updated successfully', product: updatedProduct });
@@ -157,13 +174,13 @@ export const updateProduct = async (req, res) => {
 // @access  Private
 export const deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findOne({ _id: req.params.id, userId: req.user._id });
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
 
     await Product.findByIdAndDelete(req.params.id);
-    logStockAdjustment(product._id, product.name, product.code, product.quantity, -product.quantity, 0, 'STOCK_REDUCTION', 'Product deleted from system databases');
+    logStockAdjustment(req.user._id, product._id, product.name, product.code, product.quantity, -product.quantity, 0, 'STOCK_REDUCTION', 'Product deleted from system databases');
 
     return res.json({ message: 'Product deleted successfully' });
   } catch (error) {
@@ -178,7 +195,7 @@ export const deleteProduct = async (req, res) => {
 export const adjustStock = async (req, res) => {
   try {
     const { action, quantity: inputVal, description } = req.body;
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findOne({ _id: req.params.id, userId: req.user._id });
 
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
@@ -210,6 +227,7 @@ export const adjustStock = async (req, res) => {
     await product.save();
 
     logStockAdjustment(
+      req.user._id,
       product._id,
       product.name,
       product.code,
@@ -237,7 +255,9 @@ export const getStockHistory = async (req, res) => {
       const content = fs.readFileSync(HISTORY_FILE, 'utf8');
       logs = JSON.parse(content || '[]');
     }
-    return res.json(logs);
+    // Filter history logs by the current user's ID
+    const userLogs = logs.filter(log => log.userId === req.user._id.toString());
+    return res.json(userLogs);
   } catch (error) {
     console.error('getStockHistory Error:', error.message);
     return res.status(500).json({ message: 'Server error fetching stock adjustment logs' });

@@ -11,7 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const HISTORY_FILE = path.join(__dirname, '../../database_files/stock_history.json');
 
 // Log inventory changes on checkout sales
-const logSaleStockMovement = (productId, name, code, beforeQty, change, afterQty) => {
+const logSaleStockMovement = (userId, productId, name, code, beforeQty, change, afterQty) => {
   try {
     const dir = path.dirname(HISTORY_FILE);
     if (!fs.existsSync(dir)) {
@@ -24,6 +24,7 @@ const logSaleStockMovement = (productId, name, code, beforeQty, change, afterQty
     }
     const newLog = {
       _id: Math.random().toString(36).substring(2, 11),
+      userId: userId ? userId.toString() : null,
       productId,
       name,
       code,
@@ -52,8 +53,8 @@ export const createInvoice = async (req, res) => {
       return res.status(400).json({ message: 'Buyer customer and itemized product list are required' });
     }
 
-    // Verify customer exists
-    const customer = await Customer.findById(customerId);
+    // Verify customer exists and belongs to the user
+    const customer = await Customer.findOne({ _id: customerId, userId: req.user._id });
     if (!customer) {
       return res.status(404).json({ message: 'Target customer was not found' });
     }
@@ -62,14 +63,14 @@ export const createInvoice = async (req, res) => {
     let subtotal = 0;
     const finalInvoiceProducts = [];
 
-    // We do sequential check so we can fail early if any item has insufficient stock
+    // We do sequential check so we can fail early if any item has insufficient stock or doesn't belong to the user
     for (const item of products) {
       const { productId, quantity } = item;
       if (!productId || !quantity || Number(quantity) <= 0) {
         return res.status(400).json({ message: 'Each invoice item must have a valid productId and positive quantity' });
       }
 
-      const product = await Product.findById(productId);
+      const product = await Product.findOne({ _id: productId, userId: req.user._id });
       if (!product) {
         return res.status(404).json({ message: `Product not found for ID: ${productId}` });
       }
@@ -106,7 +107,7 @@ export const createInvoice = async (req, res) => {
 
     // Reduce inventory records & write stock logs
     for (const item of finalInvoiceProducts) {
-      const product = await Product.findById(item.productId);
+      const product = await Product.findOne({ _id: item.productId, userId: req.user._id });
       const beforeQty = Number(product.quantity);
       const afterQty = beforeQty - item.quantity;
 
@@ -114,11 +115,12 @@ export const createInvoice = async (req, res) => {
       await product.save();
 
       // Write log
-      logSaleStockMovement(product._id, product.name, product.code, beforeQty, -item.quantity, afterQty);
+      logSaleStockMovement(req.user._id, product._id, product.name, product.code, beforeQty, -item.quantity, afterQty);
     }
 
     // Save final invoice record
     const invoice = await Invoice.create({
+      userId: req.user._id,
       invoiceNumber,
       customerId,
       products: finalInvoiceProducts,
@@ -143,7 +145,7 @@ export const createInvoice = async (req, res) => {
 // @access  Private
 export const getInvoices = async (req, res) => {
   try {
-    const invoices = await Invoice.find({});
+    const invoices = await Invoice.find({ userId: req.user._id });
     return res.json(invoices);
   } catch (error) {
     console.error('getInvoices Error:', error.message);
@@ -156,7 +158,7 @@ export const getInvoices = async (req, res) => {
 // @access  Private
 export const getInvoiceById = async (req, res) => {
   try {
-    const invoice = await Invoice.findById(req.params.id);
+    const invoice = await Invoice.findOne({ _id: req.params.id, userId: req.user._id });
     if (!invoice) {
       return res.status(404).json({ message: 'Invoice print sheet was not found' });
     }
@@ -172,10 +174,10 @@ export const getInvoiceById = async (req, res) => {
 // @access  Private
 export const getReportsData = async (req, res) => {
   try {
-    const products = await Product.find({}) || [];
-    const invoices = await Invoice.find({}) || [];
-    const customers = await Customer.find({}) || [];
-    const suppliers = await Supplier.find({}) || [];
+    const products = await Product.find({ userId: req.user._id }) || [];
+    const invoices = await Invoice.find({ userId: req.user._id }) || [];
+    const customers = await Customer.find({ userId: req.user._id }) || [];
+    const suppliers = await Supplier.find({ userId: req.user._id }) || [];
 
     // Report 1: Basic counters
     const totalProductsCount = products.length;

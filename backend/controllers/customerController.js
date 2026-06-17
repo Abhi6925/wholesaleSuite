@@ -5,7 +5,7 @@ import Customer from '../models/Customer.js';
 // @access  Private
 export const getCustomers = async (req, res) => {
   try {
-    const customers = await Customer.find({});
+    const customers = await Customer.find({ userId: req.user._id });
     return res.json(customers);
   } catch (error) {
     console.error('getCustomers Error:', error.message);
@@ -18,7 +18,7 @@ export const getCustomers = async (req, res) => {
 // @access  Private
 export const getCustomerById = async (req, res) => {
   try {
-    const customer = await Customer.findById(req.params.id);
+    const customer = await Customer.findOne({ _id: req.params.id, userId: req.user._id });
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }
@@ -41,6 +41,7 @@ export const createCustomer = async (req, res) => {
     }
 
     const customer = await Customer.create({
+      userId: req.user._id,
       name,
       email: email || '',
       phone,
@@ -61,7 +62,7 @@ export const updateCustomer = async (req, res) => {
   try {
     const { name, email, phone, address } = req.body;
 
-    const customer = await Customer.findById(req.params.id);
+    const customer = await Customer.findOne({ _id: req.params.id, userId: req.user._id });
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }
@@ -85,7 +86,7 @@ export const updateCustomer = async (req, res) => {
 // @access  Private
 export const deleteCustomer = async (req, res) => {
   try {
-    const customer = await Customer.findById(req.params.id);
+    const customer = await Customer.findOne({ _id: req.params.id, userId: req.user._id });
     if (!customer) {
       return res.status(404).json({ message: 'Customer not found' });
     }

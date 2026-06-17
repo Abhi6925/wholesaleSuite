@@ -29,10 +29,14 @@ const invoiceProductSchema = new mongoose.Schema({
 });
 
 const invoiceSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   invoiceNumber: {
     type: String,
     required: true,
-    unique: true,
   },
   customerId: {
     type: String,
@@ -61,6 +65,9 @@ const invoiceSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+// Compound index to guarantee uniqueness of invoice number per user
+invoiceSchema.index({ invoiceNumber: 1, userId: 1 }, { unique: true });
 
 const Invoice = getModel('Invoice', invoiceSchema);
 

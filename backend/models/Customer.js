@@ -2,6 +2,11 @@ import mongoose from 'mongoose';
 import { getModel } from '../config/db.js';
 
 const customerSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   name: {
     type: String,
     required: true,
